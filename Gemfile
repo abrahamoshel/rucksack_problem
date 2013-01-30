@@ -1,0 +1,10 @@
+source "http://rubygems.org"
+gem 'cucumber'
+gem 'rspec'
+gem 'autotest-standalone'
+gem 'autotest-fsevent'
+gem 'autotest-growl'
+gem 'redgreen'
+gem 'pry'
+gem 'awesome_print'
+gem 'terminal-table'
