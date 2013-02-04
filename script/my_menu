@@ -8,16 +8,18 @@ my_menu = MyMenu::Menu.new(STDOUT)
 ## Welcome message and prompt for data file
 my_menu.greeting
 data_file = gets.chomp
-my_menu.ordering_instructions
-dish_max_ordered = gets.chomp
+# my_menu.ordering_instructions
+# dish_max_ordered = gets.chomp
 
 ## Returns an instance of FileResource
 file_resource = my_menu.parse_data_file(data_file)
 ## prepare file to be sent to the menu
+## TODO if menu is empty Hash than exit program there are no
+## available items to order
 total, menu = file_resource.assemble_menu
 
 ## Returns menu items that meet the total or a message that no items are available
-my_menu.suggest_items(menu, total, dish_max_ordered)
+my_menu.suggest_items(menu, total) # was in vars passed dish_max_ordered
 
 
 at_exit { puts "\n***\nThanks for dinning with us please come again\n***" }
