@@ -47,27 +47,100 @@ module MyMenu
       context 'total is not 0 and larger than the smallest menu item' do
         total = 1
         it "should suggest 1 as item menu for amount of 1" do
-          menu.suggest_items(my_menu, total).should == [[1]]
+          menu.suggest_items(my_menu, total).should =~ [[1]]
         end
 
-        it "should have two suggestions amount of 2" do
+        it "should have 2 suggestions amount of 2" do
           total += 1
-          menu.suggest_items(my_menu, total).should == [[2], [1, 1]]
+          menu.suggest_items(my_menu, total).should =~
+            [ [2],
+              [1, 1]
+            ]
         end
 
-        it "should have three suggestions amount of 3" do
+        it "should have 3 suggestions amount of 3" do
           total += 1
-          menu.suggest_items(my_menu, total).should == [[3], [2, 1], [1, 1, 1]]
+          menu.suggest_items(my_menu, total).should =~
+            [ [3],
+              [2, 1],
+              [1, 1, 1]
+            ]
         end
-        it "should have four suggestions amount of 4" do
+        it "should have 5 suggestions amount of 4" do
           total += 1
           my_menu.replace([1, 2, 3, 4])
-          menu.suggest_items(my_menu, total).should == [[4], [3, 1], [2, 2], [2, 1, 1], [1, 1, 1, 1]]
+          menu.suggest_items(my_menu, total).should =~
+            [ [4],
+              [3, 1],
+              [2, 2], [2, 1, 1],
+              [1, 1, 1, 1]
+            ]
         end
-        it "should have four suggestions amount of 4" do
-          total = 5
+        it "should have 6 suggestions amount of 5" do
+          total += 1
           my_menu.replace([1, 2, 3, 4])
-          menu.suggest_items(my_menu, total).should =~ [[4, 1], [3, 2], [3, 1, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]]
+          ## later change == to =~
+          menu.suggest_items(my_menu, total).should =~
+            [ [4, 1],
+              [3, 2], [3, 1, 1],
+              [2, 2, 1], [2, 1, 1, 1],
+              [1, 1, 1, 1, 1]
+            ]
+        end
+        it "should have 9 suggestions amount of 6" do
+          total = 6
+          my_menu.replace([1, 2, 3, 4])
+          ## later change == to =~
+          menu.suggest_items(my_menu, total).should =~
+            [ [4, 2], [4, 1, 1],
+              [3, 3], [3, 2, 1], [3, 1, 1, 1],
+              [2, 2, 2], [2, 2, 1, 1], [2, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1]
+            ]
+        end
+        it "should have 11 suggestions amount of 7" do
+          total = 7
+          my_menu.replace([1, 2, 3, 4])
+          ## later change == to =~
+          menu.suggest_items(my_menu, total).should =~
+            [ [4, 3], [4, 2, 1], [4, 1, 1, 1],
+              [3, 3, 1], [3, 2, 2], [3, 2, 1, 1], [3, 1, 1, 1, 1],
+              [2, 2, 2, 1], [2, 2, 1, 1, 1], [2, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1]
+            ]
+        end
+        it "should have 14 suggestions amount of 8" do
+          total = 8
+          my_menu.replace([1, 2, 3, 4])
+          ## later change == to =~
+          menu.suggest_items(my_menu, total).should =~
+            [ [4, 4], [4, 2, 2], [4, 2, 1, 1], [4, 1, 1, 1, 1],
+              [3, 3, 2], [3, 3, 1, 1], [3, 2, 2, 1], [3, 2, 1, 1, 1], [3, 1, 1, 1, 1, 1],
+              [2, 2, 2, 2], [2, 2, 2, 1, 1], [2, 2, 1, 1, 1, 1], [2, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1, 1]
+            ]
+        end
+        it "should have 15 suggestions amount of 9" do
+          total = 9
+          my_menu.replace([1, 2, 3, 4])
+          ## later change == to =~
+          menu.suggest_items(my_menu, total).should =~
+            [ [4, 4, 1], [4, 2, 2, 1], [4, 2, 1, 1, 1], [4, 1, 1, 1, 1, 1],
+              [3, 3, 3], [3, 3, 2, 1], [3, 3, 1, 1, 1], [3, 2, 2, 1, 1], [3, 2, 1, 1, 1, 1], [3, 1, 1, 1, 1, 1, 1],
+              [2, 2, 2, 2, 1], [2, 2, 2, 1, 1, 1], [2, 2, 1, 1, 1, 1, 1], [2, 1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ]
+        end
+        it "should have 19 suggestions amount of 10" do
+          total = 10
+          my_menu.replace([1, 2, 3, 4])
+          ## later change == to =~
+          menu.suggest_items(my_menu, total).should =~
+            [ [4, 4, 2], [4, 3, 3],  [4, 4, 1, 1], [4, 2, 2, 2], [4, 2, 2, 1, 1], [4, 2, 1, 1, 1, 1], [4, 1, 1, 1, 1, 1, 1],
+              [3, 3, 3, 1], [3, 3, 2, 2], [3, 3, 2, 1, 1], [3, 3, 1, 1, 1, 1], [3, 2, 1, 1, 1, 1, 1], [3, 1, 1, 1, 1, 1, 1, 1],
+              [2, 2, 2, 2, 2], [2, 2, 2, 2, 1, 1], [2, 2, 2, 1, 1, 1, 1], [2, 2, 1, 1, 1, 1, 1, 1], [2, 1, 1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ]
         end
       end
     end
