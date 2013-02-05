@@ -76,7 +76,7 @@ module MyMenu
           total -= menu_item
         end
 
-        # duplicate_items = Hash.new(0)
+        # duplicate_items = Hash.new(0  )
         # item_matches.each do |count|
         #   duplicate_items[count] += 1
         # end
@@ -100,9 +100,9 @@ module MyMenu
       @combos.sort! {|a, b| a.size <=> b.size}
       @combos.uniq
     end
+
     def find_every_replacement(item_matches, key)
       replacement_match = []
-      stuff = @divisables[key]
 
       item_matches.map do |s|
         if s == key
@@ -118,15 +118,6 @@ module MyMenu
       end
       replacement_match.sort! {|lt, gt| gt <=> lt}
       @combos << replacement_match if replacement_match.inject(:+) == @total
-      # item_matches.each_with_index |match, index|
-
-      #   @divisables[key].each |replacement|
-      #     while match % menu_item && total >= menu_item
-      #       second_matches << menu_item
-      #       total -= menu_item
-      #     end
-      # end
-      # binding.pry
     end
 
     def iterator(match, menu)
