@@ -51,7 +51,7 @@ module MyMenu
         end
 
         it "should have 2 suggestions amount of 2" do
-          total += 1
+          total = 2
           menu.suggest_items(my_menu, total).should =~
             [ [2],
               [1, 1]
@@ -59,7 +59,7 @@ module MyMenu
         end
 
         it "should have 3 suggestions amount of 3" do
-          total += 1
+          total = 3
           menu.suggest_items(my_menu, total).should =~
             [ [3],
               [2, 1],
@@ -67,7 +67,7 @@ module MyMenu
             ]
         end
         it "should have 5 suggestions amount of 4" do
-          total += 1
+          total = 4
           my_menu.replace([1, 2, 3, 4])
           menu.suggest_items(my_menu, total).should =~
             [ [4],
@@ -77,7 +77,7 @@ module MyMenu
             ]
         end
         it "should have 6 suggestions amount of 5" do
-          total += 1
+          total = 5
           my_menu.replace([1, 2, 3, 4])
           ## later change == to =~
           menu.suggest_items(my_menu, total).should =~
