@@ -25,9 +25,6 @@ module MyMenu
       @total = total
       create_divisables_table
       make_suggestion
-      # menu.each {|menu_item| @menu << MyMenu::MenuItem.new(menu_item) }
-      # find_menu_combinations
-      # total_matching_combinations
 
       # Coumment out while testing
       # @output.print  formated_matches
@@ -67,6 +64,7 @@ module MyMenu
       end
 
       menu.sort! {|lt, gt| gt <=> lt}
+      blah = fill_with_lowest_divisable(match, menu)
 
       menu.each do |menu_item|
         item_matches = []
@@ -76,7 +74,7 @@ module MyMenu
           total -= menu_item
         end
 
-        # duplicate_items = Hash.new(0  )
+        # duplicate_items = Hash.new(0)
         # item_matches.each do |count|
         #   duplicate_items[count] += 1
         # end
@@ -85,60 +83,63 @@ module MyMenu
         @combos << item_matches if item_matches.inject(:+) == @total
 
 
-        if item_matches.inject(:+) == @total
-          [@divisables.keys,  item_matches].reduce(:&).each do |key|
-            find_every_replacement(item_matches, key)
-          end
-        end
+        # binding.pry
+        # if item_matches.inject(:+) == @total
+        #   [@divisables.keys,  item_matches].reduce(:&).each do |key|
+        #     find_every_replacement(item_matches, key)
+        #   end
+        # end
 
         # if duplicate_items.values.any? {|v| v > 1} && menu_item != menu.min
         #   selected_menu = menu.select {|m| menu_item % m == 0}
         #   iterator(menu_item, selected_menu) unless selected_menu.size <= 1
         # end
       end
-      @combos.sort! {|lt, gt| gt[0] <=> lt[0]}
-      @combos.sort! {|a, b| a.size <=> b.size}
-      @combos.uniq
+      @replacement_match = []
+      @combos.each {|b| mutated_solutions(b) }
+      solutions = @replacement_match + @combos
+      solutions.sort! {|lt, gt| gt[0] <=> lt[0]}
+      solutions.sort! {|a, b| a.size <=> b.size}
+      solutions.uniq
     end
 
-    def find_every_replacement(item_matches, key)
-      replacement_match = []
-
-      item_matches.map do |s|
-        if s == key
-          @divisables[key].each do |divisable|
-            while key %  divisable && key >= divisable
-              replacement_match << divisable
-              key -= divisable
-            end
-          end
-        else
-          replacement_match << s
+    def mutated_solutions(array)
+      return if array.all? {|a| a == @menu.min }
+      structs = []
+      array.each_with_index do |arr, index|
+        return if arr == @menu.min
+        @divisables[arr].each do |value|
+          structs << OpenStruct.new(:index =>index, :replacement => value, :array => Array.new(array))
         end
       end
-      replacement_match.sort! {|lt, gt| gt <=> lt}
-      @combos << replacement_match if replacement_match.inject(:+) == @total
+
+      structs.each do |struct|
+        replacement = struct.array.delete_at(struct.index)
+        while replacement % struct.replacement && replacement >= struct.replacement
+          struct.array << struct.replacement
+          replacement -= struct.replacement
+        end
+        struct.array << replacement unless replacement == 0
+        @replacement_match << struct.array.sort! {|lt, gt| gt <=> lt}
+      end
+      structs.collect(&:array).each {|a| mutated_solutions(a) unless a.all? {|b| b == @menu.min }}
     end
 
-    def iterator(match, menu)
+    def fill_with_lowest_divisable(match, menu)
       menu.sort! {|lt, gt| gt <=> lt}
 
       second_matches = []
       menu.each do |menu_item|
         total = match
-        while total % menu_item && total >= menu_item
-          second_matches << menu_item
-          total -= menu_item
+        second_matches = []
+        total -= menu_item
+        second_matches << menu_item
+        while total % menu.min && total >= menu.min
+          second_matches << menu.min
+          total -= menu.min
         end
-
         @combos << second_matches if second_matches.inject(:+) == @total
       end
-
-    end
-
-    def add_items_equal_to_total
-      ## returns all other hashes that don't equal total
-      binding.pry
     end
 
     def total_matching_combinations
