@@ -9,7 +9,6 @@ my_menu = MyMenu::Menu.new(STDOUT)
 my_menu.greeting
 data_file = gets.chomp
 # my_menu.ordering_instructions
-# dish_max_ordered = gets.chomp
 
 ## Returns an instance of FileResource
 file_resource = my_menu.parse_data_file(data_file)

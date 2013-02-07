@@ -12,10 +12,6 @@ module MyMenu
       @output.puts 'Please Enter a File Location or URL:'
     end
 
-    # def ordering_instructions
-    #   @output.puts 'What is the max amount of dishes you would like to order?'
-    # end
-
     def parse_data_file(data_file)
       FileResource.new(data_file)
     end
