@@ -74,11 +74,6 @@ module MyMenu
           total -= menu_item
         end
 
-        # duplicate_items = Hash.new(0)
-        # item_matches.each do |count|
-        #   duplicate_items[count] += 1
-        # end
-
         item_matches << total if menu.include?(total)
         @combos << item_matches if item_matches.inject(:+) == @total
 
@@ -88,11 +83,6 @@ module MyMenu
         #   [@divisables.keys,  item_matches].reduce(:&).each do |key|
         #     find_every_replacement(item_matches, key)
         #   end
-        # end
-
-        # if duplicate_items.values.any? {|v| v > 1} && menu_item != menu.min
-        #   selected_menu = menu.select {|m| menu_item % m == 0}
-        #   iterator(menu_item, selected_menu) unless selected_menu.size <= 1
         # end
       end
       @replacement_match = []
