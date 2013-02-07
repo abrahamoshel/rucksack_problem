@@ -33,8 +33,6 @@ module MyMenu
     def create_divisables_table
       @divisables = Hash.new
       @menu.each do |menu_item|
-        ## orginally select {|key| menu_item % key == 0 } but I need all the
-        ## numbers lower than it not just the factors
         @divisables[menu_item] = @menu.select{|key| menu_item > key}
       end
       @divisables.reject! {| key, value | key == @menu.min }

@@ -1,0 +1,7 @@
+$10
+mixed fruit,$1
+french fries,$2
+side salad,$3
+hot wings,$4
+mozzarella sticks,$5
+sampler plate,$6
