@@ -142,16 +142,6 @@ module MyMenu
       end
     end
 
-    def total_matching_combinations
-      @matches = []
-      @combos.each do |combo_array|
-        combo_array.each do |array|
-          array_total = array.map(&:price).inject(&:+)
-          @matches << array if sprintf('%.2f', array_total).to_f == @total
-        end
-      end
-    end
-
     def formated_matches
       @message = []
       @matches.each {|match| @message << match.collect(&:menu_item)}
