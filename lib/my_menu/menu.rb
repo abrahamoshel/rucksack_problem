@@ -1,6 +1,10 @@
 require 'pry'
 require 'terminal-table'
 
+## Soluction takes about 115--125MB of memory but maxes out the CPU
+## Orginally using repeated_combination to find all the permutation
+## it took almost 3GB of memory before I forced the program to end
+
 module MyMenu
   class Menu
     def initialize(output)
@@ -60,8 +64,28 @@ module MyMenu
       end
 
       menu.sort! {|lt, gt| gt <=> lt}
-      blah = fill_with_lowest_divisable(match, menu)
+      ## inserts soluctions into @combos each of the divisables
+      ## plus the lowest divisable as many times as it can
+      ## 8 = [4, 1, 1, 1, 1] && [3, 1, 1, 1, 1, 1]
+      fill_with_lowest_divisable(match, menu)
+      ## start with amount to be reached match, full menu, and how many
+      ## less of the greatest divisable you want in the solution
+      ## ex: 12 = [4, 4, 4] but with the 1 below you would get
+      ## 12 = [4, 4, 3, 1]
+      two_greatest_divisables(match, menu, 1)
 
+      greedy_solutions(match, menu)
+
+
+      @replacement_match = []
+      @combos.each {|b| mutated_solutions(b) }
+      solutions = @replacement_match + @combos
+      solutions.sort! {|lt, gt| gt[0] <=> lt[0]}
+      solutions.sort! {|a, b| a.size <=> b.size}
+      solutions.uniq
+    end
+
+    def greedy_solutions(match, menu)
       menu.each do |menu_item|
         item_matches = []
         total = match
@@ -72,28 +96,14 @@ module MyMenu
 
         item_matches << total if menu.include?(total)
         @combos << item_matches if item_matches.inject(:+) == @total
-
-
-        # binding.pry
-        # if item_matches.inject(:+) == @total
-        #   [@divisables.keys,  item_matches].reduce(:&).each do |key|
-        #     find_every_replacement(item_matches, key)
-        #   end
-        # end
       end
-      @replacement_match = []
-      @combos.each {|b| mutated_solutions(b) }
-      solutions = @replacement_match + @combos
-      solutions.sort! {|lt, gt| gt[0] <=> lt[0]}
-      solutions.sort! {|a, b| a.size <=> b.size}
-      solutions.uniq
     end
 
     def mutated_solutions(array)
-      return if array.all? {|a| a == @menu.min }
+      return [] if array.all? {|a| a == @menu.min }
       structs = []
       array.each_with_index do |arr, index|
-        return if arr == @menu.min
+        next if arr == @menu.min
         @divisables[arr].each do |value|
           structs << OpenStruct.new(:index =>index, :replacement => value, :array => Array.new(array))
         end
@@ -126,6 +136,23 @@ module MyMenu
         end
         @combos << second_matches if second_matches.inject(:+) == @total
       end
+    end
+
+    def two_greatest_divisables(match, menu, count)
+      menu.sort! {|lt, gt| gt <=> lt}
+      menu.each_cons(2) do |menu_item, second_menu_item|
+        second_matches = []
+        total = match
+        meh = (match / menu_item) - count
+        meh.times {|i| total -= menu_item}
+        meh.times {|i| second_matches << menu_item}
+        while total % second_menu_item && total >= second_menu_item
+            second_matches << second_menu_item
+            total -= second_menu_item
+        end
+        @combos << second_matches if second_matches.inject(:+) == @total
+      end
+      two_greatest_divisables(match, menu, count +=1 ) unless count == 2
     end
 
     def formated_matches
