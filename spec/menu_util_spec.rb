@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FileResource, "#start" do
+describe MenuUtil, "#start" do
   it "sends a welcome message" do
     pending "not the correct spec for testing FileResource"
     output.should_receive(:puts).with('Welcome to My Menu!')

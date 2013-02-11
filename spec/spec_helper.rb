@@ -1,3 +1,3 @@
 require 'rubygems'
 require 'my_menu'
-require 'file_resource'
+require 'menu_util'

@@ -7,8 +7,10 @@ require 'terminal-table'
 
 module MyMenu
   class Menu
+    Replacement = Struct.new(:index, :replacement, :array)
     def initialize(output)
       @output = output
+      greeting
     end
 
     def greeting
@@ -17,17 +19,25 @@ module MyMenu
     end
 
     def parse_data_file(data_file)
-      FileResource.new(data_file)
+      @menu_util = MenuUtil.new(data_file)
+    end
+
+    def run
+      total, menu = @menu_util.assemble_menu
+      @orginal_menu = menu
+      @menu = menu.collect(&:price)
+      suggest_items(@menu, total)
     end
 
     def suggest_items(menu, total)
-      @menu = menu
+      ## memoizing incase i'm testing just fixnums and not a menu_item struct
+      ## refer to run method so see when menu_item stuct is created
+      menu.reject! {|m| m > total }
+      @menu  ||= menu
       @total = total
       create_divisables_table
       make_suggestion
-
-      # Coumment out while testing
-      # @output.print  formated_matches
+      @output.puts  formated_matches
     end
 
     def create_divisables_table
@@ -40,6 +50,7 @@ module MyMenu
 
     def make_suggestion
       if @menu.empty?
+        @matches =["ahhhh no items on the Menu total your desired amount"]
       else
         @combos = []
         find_menu_combinations(@total, @menu)
@@ -62,10 +73,6 @@ module MyMenu
       end
 
       menu.sort! {|lt, gt| gt <=> lt}
-      ## inserts soluctions into @combos each of the divisables
-      ## plus the lowest divisable as many times as it can
-      ## 8 = [4, 1, 1, 1, 1] && [3, 1, 1, 1, 1, 1]
-      fill_with_lowest_divisable(match, menu)
       ## start with amount to be reached match, full menu, and how many
       ## less of the greatest divisable you want in the solution
       ## ex: 12 = [4, 4, 4] but with the 1 below you would get
@@ -77,10 +84,10 @@ module MyMenu
 
       @replacement_match = []
       @combos.each {|b| mutated_solutions(b) }
+
       solutions = @replacement_match + @combos
-      solutions.sort! {|lt, gt| gt[0] <=> lt[0]}
-      solutions.sort! {|a, b| a.size <=> b.size}
-      solutions.uniq
+      solutions.uniq!
+      @matches = solutions
     end
 
     def greedy_solutions(match, menu)
@@ -103,7 +110,7 @@ module MyMenu
       array.each_with_index do |arr, index|
         next if arr == @menu.min
         @divisables[arr].each do |value|
-          structs << OpenStruct.new(:index =>index, :replacement => value, :array => Array.new(array))
+          structs << Replacement.new(index, value, Array.new(array))
         end
       end
 
@@ -119,52 +126,52 @@ module MyMenu
       structs.collect(&:array).each {|a| mutated_solutions(a) unless a.all? {|b| b == @menu.min }}
     end
 
-    def fill_with_lowest_divisable(match, menu)
-      menu.sort! {|lt, gt| gt <=> lt}
-
-      second_matches = []
-      menu.each do |menu_item|
-        total = match
-        second_matches = []
-        total -= menu_item
-        second_matches << menu_item
-        while total % menu.min && total >= menu.min
-          second_matches << menu.min
-          total -= menu.min
-        end
-        @combos << second_matches if second_matches.inject(:+) == @total
-      end
-    end
-
     def two_greatest_divisables(match, menu, count)
       menu.sort! {|lt, gt| gt <=> lt}
       menu.each_cons(2) do |menu_item, second_menu_item|
         second_matches = []
         total = match
-        meh = (match / menu_item) - count
-        meh.times {|i| total -= menu_item}
-        meh.times {|i| second_matches << menu_item}
+        quotient = (match / menu_item) - count
+        quotient.times {|i| total -= menu_item}
+        quotient.times {|i| second_matches << menu_item}
         while total % second_menu_item && total >= second_menu_item
             second_matches << second_menu_item
             total -= second_menu_item
         end
         @combos << second_matches if second_matches.inject(:+) == @total
       end
-      two_greatest_divisables(match, menu, count +=1 ) unless count == 2
+      two_greatest_divisables(match, menu, count +=1 ) unless count == menu.count
     end
 
     def formated_matches
       @message = []
-      @matches.each {|match| @message << match.collect(&:menu_item)}
-      tablize
+      @matches.each {|match| @message << menu_item_name(match) }
+      @message
     end
 
-    def tablize
-      total_as_dollars = '%.2f' % @total
-      title = @message.empty? ? "Sorry no combination of the items can equal $#{total_as_dollars}" \
-                              : "You can order one of the follow to total $#{total_as_dollars}"
-      table = Terminal::Table.new :title => title, :rows => @message
+    def menu_item_name(match)
+      return match if match.is_a?(String) || @orginal_menu.nil?
+      item_by_name = []
+      match.each do |mat|
+        item = @orginal_menu.select {|m| mat == m.price}.collect(&:item_name)
+        item_by_name <<
+          if item.size > 1
+            create_suggestion_list(item)
+          else
+           item
+          end
+      end
+      item_by_name.join(", ")
     end
 
+    def create_suggestion_list(item)
+      first_suggestion = item.delete_at(0)
+      string_output =<<-EOS
+
+#{first_suggestion}
+you can also replace it with one of these items:
+#{item}
+EOS
+    end
   end
 end
