@@ -55,8 +55,10 @@ or
 ```
 
 #### Wait for result:
-For the request amount of $15.10
+
 ```
+For the request amount of $15.10
+
 french fries
 you can also replace it with one of these items:
 ["onion rings"]
