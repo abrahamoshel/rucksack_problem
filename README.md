@@ -5,6 +5,13 @@ Finding Solutions for the Rucksack/Knapsack Problem
 
 Program will find every combination of items that meet the exact total given
 
+####Before you start:
+```
+$ git clone git://github.com/abrahamoshel/rucksack_problem.git
+$ cd rucksack_problem
+$ bundle install
+```
+
 ###Usage:
 
 Given a file `diner_men.txt` containing:
