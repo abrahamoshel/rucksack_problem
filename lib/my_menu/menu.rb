@@ -53,7 +53,7 @@ module MyMenu
         ## greedy_solutions, and mutated_solutions
         find_menu_combinations(@total, @menu)
       end
-      @output.puts "For the request amount of $#{'%.2f' % (@total.to_i/100.0)}"
+      @output.puts "For the requested amount of $#{'%.2f' % (@total.to_i/100.0)}"
       @output.puts  formated_matches
     end
 
