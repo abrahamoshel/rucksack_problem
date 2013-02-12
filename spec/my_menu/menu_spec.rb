@@ -29,20 +29,20 @@ module MyMenu
       context 'total is either 0 or less than the smallest menu item' do
         total = -1
         it "should suggest [] as item menu for negative amount" do
-          output.should_receive(:puts).with(["ahhhh no items on the Menu total your desired amount"])
+          output.should_receive(:puts).with("ahhhh no items on the Menu total your desired amount")
           menu.suggest_items(my_menu, total)
         end
 
         it "should suggest [] as item menu for amount of 0" do
           total = 0
-          output.should_receive(:puts).with(["ahhhh no items on the Menu total your desired amount"])
+          output.should_receive(:puts).with("ahhhh no items on the Menu total your desired amount")
           menu.suggest_items(my_menu, total)
         end
 
         it "should suggest [] as item menu for amount less than smallest item menu" do
           total = 1
           my_menu.replace([2, 3, 4])
-          output.should_receive(:puts).with(["ahhhh no items on the Menu total your desired amount"])
+          output.should_receive(:puts).with("ahhhh no items on the Menu total your desired amount")
           menu.suggest_items(my_menu, total)
         end
       end
@@ -51,9 +51,7 @@ module MyMenu
         it 'suggests 7 mixed fruits from example_files/table_example.txt' do
           menu.parse_data_file("example_files/table_example.txt")
           output.should_receive(:puts).with(
-            [
-              "mixed fruit, mixed fruit, mixed fruit, mixed fruit, mixed fruit, mixed fruit, mixed fruit"
-            ]
+            "mixed fruit, mixed fruit, mixed fruit, mixed fruit, mixed fruit, mixed fruit, mixed fruit"
             )
           menu.run
         end
@@ -65,12 +63,11 @@ module MyMenu
 mixed fruit
 you can also replace it with one of these items:
 ["french fries", "side salad", "hot wings", "mozzarella sticks", "sampler plate"]
+
 EOS
           output.should_receive(:puts).with(
-            [
-              "#{string_output}, #{string_output}"
-            ]
-            )
+          "#{string_output}, #{string_output}"
+          )
           menu.run
         end
       end

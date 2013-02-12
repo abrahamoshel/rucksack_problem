@@ -1,21 +1,19 @@
 $10.00
 mixed fruit,$10.00
 french fries,$10.00
-side salad,$0.50
-hot wings,$0.50
-mozzarella sticks,$0.50
-sampler plate 1,$0.50
-sampler plate 2,$0.50
-sampler plate 3,$0.50
-sampler plate 4,$0.50
-sampler plate 5,$0.50
-sampler plate 6,$0.50
-sampler plate 7,$0.50
-sampler plate 8,$0.50
-sampler plate 9,$0.50
-sampler plate 10,$0.50
-sampler plate 11,$0.50
-sampler plate 12,$0.50
-sampler plate 13,$0.50
-sampler plate 14,$0.50
-sampler plate 15,$0.50
+side salad,$2.75
+hot wings,$3.55
+mozzarella sticks,$1.50
+sampler plate 1,$2.50
+sampler plate 2,$3.50
+sampler plate 3,$1.50
+sampler plate 4,$2.55
+sampler plate 5,$0.55
+sampler plate 6,$10.55
+sampler plate 7,$2.15
+sampler plate 8,$1.55
+sampler plate 9,$2.55
+sampler plate 10,$0.15
+sampler plate 11,$0.10
+sampler plate 12,$2.70
+sampler plate 13,$5.00

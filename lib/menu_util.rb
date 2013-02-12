@@ -7,9 +7,11 @@ class MenuUtil
   end
 
   def assemble_menu
+    ## takes the first line of the data file to be the total and converts to cents
     parse_total
+    ## creates array of MenuItem Structs
     parse_menu_items
-    [@total, @menu]
+    [@total, @menu.compact]
   end
 
   def parse_total
@@ -21,24 +23,17 @@ class MenuUtil
     ## Drop the first line because that should be the total
     @file_object.lines.drop(0).each do |line|
       split_line = line.split(',')
-      ## Returns a hash with menu item as key and amout as value
+      ## Returns a array of MenuItems with the item_name and price for each item
       ## Also removes any unwanted charters $ , /n etc.
-      ### TO-DO IF EMPTY HASH END PROGRAM RIGHT NOW ###
       @menu << covert_to_object(split_line)
     end
     @menu
   end
 
   def covert_to_object(split_line)
-      ####
-        # after find solution will be using something like
-        # a.find_all {|b| [1,4].include?(b.id) }
-        # a is a array of open structs
-      ####
-
-
       ## takes something like "$15.05\n" and make is 1505
       price = centsify(split_line.last)
+      ## Don't create a MenuItem if the price exceeds the total
       return if price > @total
       ## should strip menu item of line breaks
       menu_item = split_line.first.strip
@@ -47,12 +42,12 @@ class MenuUtil
       MenuItem.new(menu_item, price)
   end
 
+  ## remove anything that is not a digit and converts to cents "$15.05\n"
+  ## should be returned as 1505
   def centsify(string)
-    ## remove anything that is not a digit and converts to cents "$15.05\n"
-    ## should be returned as 15.05
     removed_charcters = string.gsub(/[^\d\.]/, '').to_f
     ## convert to cents
-    (removed_charcters * 100).to_i
+    (removed_charcters * 100).round.to_i
   end
 
 end
