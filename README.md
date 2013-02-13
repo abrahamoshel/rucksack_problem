@@ -43,15 +43,16 @@ Welcome to My Menu!
 Please Enter a File Location or URL:
 ```
 
-enter url or path to file
+enter url or path to file `http://website.com/menu.txt` or `/User/<username>/path/to/file.txt`
+**files that are included in the project you can use**
 
 ```
-http://website.com/menu.txt
-```
-or
-
-```
-/User/<username>/path/to/file.txt
+example_files/any_two_match.txt
+example_files/diner_menu.txt
+example_files/large_list.txt
+example_files/simple_example.txt
+example_files/table_example.txt
+example_files/too_expensive.txt
 ```
 
 #### Wait for result:
