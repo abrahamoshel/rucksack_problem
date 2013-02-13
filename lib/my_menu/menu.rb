@@ -1,8 +1,5 @@
-require 'pry'
-require 'terminal-table'
-
-## Soluction takes about 115--125MB of memory but maxes out the CPU
-## Orginally using repeated_combination to find all the permutation
+## Soluction takes about 150-180MB of memory but maxes out the CPU for list of 36 items
+## Orginally using repeated_combination to find all the permutation for list of 10 items
 ## it took almost 3GB of memory before I forced the program to end
 
 module MyMenu
@@ -11,6 +8,14 @@ module MyMenu
     Replacement = Struct.new(:index, :replacement, :array)
     def initialize(output)
       @output = output
+      ## used for create_divisables_table method which creates a hash of hashes
+      ## with possible replacements for any price in price_list
+      @divisables = Hash.new
+      ## set variable that will hold all working matches
+      @combos = []
+      ## while finding matches based on @combos use @replacement_match
+      ## since we don't want to dirty @combos with non-solutions
+      @replacement_match = []
       greeting
     end
 
@@ -22,86 +27,83 @@ module MyMenu
     def parse_data_file(data_file)
       ## creates a MenuUtil object which is a file from a url or file system path
       @menu_util = MenuUtil.new(data_file)
+      ## returns an array of MenuItem structs with item_name and the price in cents
+      ## as well as the total
+      @total, @orginal_menu = @menu_util.assemble_menu
     end
 
     def run
-      ## returns an array of MenuItem structs with item_name and the price in cents
-      ## as well as the total
-      total, menu = @menu_util.assemble_menu
-      ## keep orginal_menu so that we can collect the output as menu_item names
-      ## in the menu_item_name method
-      @orginal_menu = menu
-      ## for all the solution calculations we only need the price so we set it as @menu
-      @menu = menu.collect(&:price)
+      ## for all the solution calculations we only need the price so we set it as @price_list
+      ## also only need the unique prices because create_suggestion_list will find all items with
+      ## the same pice and print out them as replacement items
+      @price_list = @orginal_menu.collect(&:price).uniq
       ## starts the calculation and in the end will print out the solution in terminal
-      suggest_items(@menu, total)
+      suggest_items(@price_list, @total)
     end
 
-    def suggest_items(menu, total)
-      menu.reject! {|m| m > total }
+    def suggest_items(price_list, total)
+      price_list.reject! {|m| m > total }
       ## memoizing incase i'm testing just fixnums and not a menu_item struct
       ## refer to run method so see when menu_item stuct is created
-      @menu  ||= menu
+      @price_list  ||= price_list
       @total = total
-      create_divisables_table
-      if @menu.empty?
+      if @price_list.empty?
         @matches =["ahhhh no items on the Menu total your desired amount"]
       else
-        ## set varoable that will hold all the matches
-        @combos = []
-        ## finds solutions through serveral methods two_greatest_divisables,
+        create_divisables_table
+        ## finds solutions through serveral methods greater_divisables,
         ## greedy_solutions, and mutated_solutions
-        find_menu_combinations(@total, @menu)
+        find_menu_combinations
       end
       @output.puts "For the requested amount of $#{'%.2f' % (@total.to_i/100.0)}"
       @output.puts  formated_matches
     end
 
     def create_divisables_table
-      @divisables = Hash.new
-      @menu.each do |menu_item|
-        @divisables[menu_item] = @menu.select{|key| menu_item > key}
+      ## @divisables is an empty hash created in initialize
+      @price_list.each do |menu_item|
+        @divisables[menu_item] = @price_list.select{|key| menu_item > key}
       end
-      @divisables.reject! {| key, value | key == @menu.min }
+      @divisables.reject! {| key, value | key == @price_list.min }
     end
 
-    def find_menu_combinations(match, menu)
+    def find_menu_combinations
       ### first implementation
       ## changed because the overhead was too expensive up front
-      # @menu.keys.inject(1) do |count, item|
-      #   @combos << @menu.keys.repeated_combination(count).to_a
+      # @price_list.keys.inject(1) do |count, item|
+      #   @combos << @price_list.keys.repeated_combination(count).to_a
       #   count += 1
       # end
 
-      if match < menu.min || match == 0
+      if @total < @price_list.min || @total == 0
         return @combos
       end
 
-      menu.sort! {|lt, gt| gt <=> lt}
+      @price_list.sort! {|lt, gt| gt <=> lt}
       ## start with amount to be reached match, full menu, and how many
       ## less of the greatest divisable you want in the solution
       ## ex: 12 = [4, 4, 4] but with the 1 below you would get
       ## 12 = [4, 4, 3, 1]
-      two_greatest_divisables(match, menu, 1)
-      greedy_solutions(match, menu)
+      greater_divisables(@total, @price_list, 0)
+      @combos += greedy_solutions(@total, @price_list)
 
-      @replacement_match = []
+
       ## clean up all the combos because I may have duplicates the recursive method
       @combos.uniq!
       ## mutated_solutions will take all the solutions found already and find other solutions
       ## based on replacement of items in that solution menu of [3, 2, 1] with a solution
       ## of [3] can also be a solution of [2, 1]
       @combos.each {|b| mutated_solutions(b) }
-
-      solutions = @replacement_match + @combos
-      solutions.uniq!
-      @matches = solutions
+      @combos += @replacement_match
+      @combos.uniq!
+      @matches = @combos
     end
 
     ## This works just like a coin machine it just returns the simplest solution
     ## if it can for total of 10 for array [8, 7, 4, 5, 2, 1] it would return [8, 2]
     ## as a solution
     def greedy_solutions(match, menu)
+      matches = []
       menu.each do |menu_item|
         item_matches = []
         total = match
@@ -111,18 +113,19 @@ module MyMenu
         end
 
         item_matches << total if menu.include?(total)
-        @combos << item_matches if item_matches.inject(:+) == @total
+        matches << item_matches if item_matches.inject(:+) == @total
       end
+      matches.delete_if {|m| @combos.include?(m)}
     end
 
-    def mutated_solutions(solution, count=0)
-      return [] if solution.all? {|a| a == @menu.min }
+    def mutated_solutions(solution)
+      return [] if solution.all? {|a| a == @price_list.min }
       structs = []
       ## Create array of structs with the divisables of a item in a solution
       ## array. ex: [3, 2, 1] would create a Replacement struct with at index
       ## of 0, 2 can replace with with a [2] and 1 can replace it with [1, 1]
       solution.each_with_index do |arr, index|
-        next if arr == @menu.min || @divisables[arr].nil?
+        next if arr == @price_list.min || @divisables[arr].nil?
         @divisables[arr].each do |replaceable|
           structs << Replacement.new(index, replaceable, Array.new(solution))
         end
@@ -134,21 +137,24 @@ module MyMenu
           struct.array << struct.replacement
           replacement -= struct.replacement
         end
-        struct.array << replacement if @menu.include?(replacement)
+        struct.array << replacement if @price_list.include?(replacement)
         @replacement_match << struct.array.sort! {|lt, gt| gt <=> lt} if struct.array.inject(:+) == @total
       end
       ## call method on itself with the new solutions to get the solutions that can be found
       ## with the lower values on the menu
-      structs.collect(&:array).each {|a| mutated_solutions(a, count += 1) unless
+      structs.each do |a|
         ## stop recursion it the sum doesn't match the target total or the last match
         ## found is the current match found
-        @replacement_match.last == a || a.inject(:+) != @total}
+        unless @replacement_match.last == a.array || a.array.inject(:+) != @total
+          mutated_solutions(a.array)
+        end
+      end
     end
 
     ## finds all solutions that might be made by the two of items next to each other in an array
     ## array = [4, 3, 2, 1], total 12 == [4, 4, 4] through greedy_solutions but this will find
     ## [4, 4, 3, 1] and [4, 3, 3, 2]
-    def two_greatest_divisables(match, menu, count)
+    def greater_divisables(match, menu, count)
       menu.sort! {|lt, gt| gt <=> lt}
       menu.each_cons(2) do |menu_item, second_menu_item|
         second_matches = []
@@ -160,9 +166,10 @@ module MyMenu
             second_matches << second_menu_item
             total -= second_menu_item
         end
+        # second_matches << total if menu.any? {|item| total % item == 0 }
         @combos << second_matches if second_matches.inject(:+) == @total
       end
-      two_greatest_divisables(match, menu, count +=1 ) unless count == 2
+      greater_divisables(match, menu, count +=1) unless count == 2
     end
 
     ## formats the solutions for the ouput in terminal

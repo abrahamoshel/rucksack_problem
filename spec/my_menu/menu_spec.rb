@@ -13,13 +13,17 @@ module MyMenu
       it "prompts for file or url" do
         output.should_receive(:puts).with('Please Enter a File Location or URL:')
         menu.greeting
+
       end
     end
 
     describe "data file entry" do
       it "sends data file results to output" do
         menu_util = menu.parse_data_file("http://www.tablexi.com/menu.txt")
-        menu_util.should be_a_kind_of(MenuUtil)
+        menu_util.first.should be_a_kind_of(Fixnum)
+        menu_util.last.each do |m|
+          m.should be_a_kind_of(MenuUtil::MenuItem)
+        end
       end
     end
 

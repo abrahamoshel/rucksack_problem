@@ -1,9 +1,14 @@
 require 'open-uri'
 
 class MenuUtil
+  # creating struct to create new menu items
   MenuItem = Struct.new(:item_name, :price)
   def initialize(file_object)
     @file_object = open(file_object)
+
+  rescue Errno::ENOENT, OpenURI::HTTPError
+    puts "You must enter a correct file path"
+    exit 1
   end
 
   def assemble_menu

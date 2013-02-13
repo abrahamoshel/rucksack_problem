@@ -5,7 +5,6 @@ GEM
       sys-uname
     autotest-growl (0.2.16)
     autotest-standalone (4.5.11)
-    awesome_print (1.1.0)
     builder (3.1.4)
     coderay (1.0.8)
     cucumber (1.2.1)
@@ -23,7 +22,6 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.3.1)
-    redgreen (1.2.2)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -35,7 +33,6 @@ GEM
     slop (3.3.3)
     sys-uname (0.9.1)
       ffi (>= 1.0.0)
-    terminal-table (1.4.5)
 
 PLATFORMS
   ruby
@@ -44,9 +41,6 @@ DEPENDENCIES
   autotest-fsevent
   autotest-growl
   autotest-standalone
-  awesome_print
   cucumber
   pry
-  redgreen
   rspec
-  terminal-table

@@ -1,19 +1,37 @@
-$10.00
+$10.55
 mixed fruit,$10.00
 french fries,$10.00
 side salad,$2.75
 hot wings,$3.55
 mozzarella sticks,$1.50
-sampler plate 1,$2.50
-sampler plate 2,$3.50
-sampler plate 3,$1.50
-sampler plate 4,$2.55
-sampler plate 5,$0.55
-sampler plate 6,$10.55
-sampler plate 7,$2.15
-sampler plate 8,$1.55
-sampler plate 9,$2.55
-sampler plate 10,$0.15
-sampler plate 11,$0.10
-sampler plate 12,$2.70
-sampler plate 13,$5.00
+cheese buger,$2.50
+ice cream sandwich,$3.50
+ketchup,$1.50
+mustard,$2.55
+eggs,$0.55
+PB and J,$10.55
+chilli,$2.15
+chichen noodle soup,$1.55
+soda pop,$2.55
+coffee,$0.15
+butter,$0.10
+pizza,$2.70
+bacon,$10.00
+ceaser sald,$10.00
+steak,$2.75
+chicken wings,$3.55
+soda water,$1.50
+clams,$2.50
+baked beans,$3.50
+shrimp cocktail,$1.50
+house salad,$2.55
+filet mignon,$0.55
+broiled walleye,$10.55
+mashed potatoes,$2.15
+fruit sorbet,$1.55
+cole slaw,$2.55
+soup of the day,$0.15
+veal meatballs,$0.10
+deviled eggs,$2.70
+roasted beets,$5.00
+baked mac-n-cheese,$5.00

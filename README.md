@@ -88,6 +88,51 @@ french fries
 you can also replace it with one of these items:
 ["onion rings"]
 
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+, condiment, condiment, condiment, condiment, condiment, condiment, condiment,
+condiment, condiment, condiment, condiment
+
+ -----------------NEW SUGGESTION-----------------------
+
+
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
+,
+french fries
+you can also replace it with one of these items:
+["onion rings"]
+
 , condiment, condiment, condiment, condiment, condiment, condiment, condiment,
 condiment, condiment, condiment, condiment, condiment, condiment, condiment,
 condiment, condiment, condiment, condiment, condiment, condiment, condiment,
